@@ -1,5 +1,7 @@
 import readline from 'readline'
 import io from 'socket.io-client'
+import parseCommand from './parse-command'
+
 
 /*
 *
@@ -16,7 +18,7 @@ import io from 'socket.io-client'
 * https://socket.io/docs/
 *
 */
-
+let connected = false
 const socket = io('http://localhost:5000')
 
 const rl = readline.createInterface({
@@ -24,14 +26,43 @@ const rl = readline.createInterface({
   output: process.stdout,
 })
 
-rl.setPrompt('main_menu> ')
-rl.prompt()
+socket.on('connect', (resp) => {
+  console.log('Connected to server')
+  rl.setPrompt('Main Menu: ')
+  rl.prompt()
+  connected = true
+})
+
 
 rl.on('line', (input) => {
-  rl.write(`Received: ${input}`)
+  if (connected) {
+    const command = parseCommand(input)
+    if (command) {
+      socket.emit('command', command)
+    } else {
+      console.log('Invalid Command')
+      rl.prompt()
+    }
+  }
+})
+
+socket.on('command-response', (resp) => {
+  console.log(resp)
   rl.prompt()
 })
 
-socket.on('connection', (socket) => {
-  rl.write('Connected')
-})
+let secondsWaited = 0
+const connectionInterval = setInterval(() => {
+  if (!connected) {
+    console.log('Trying to connect...')
+    if (secondsWaited > 10) {
+      clearInterval(connectionInterval)
+      console.log('Could not connect. Try again later')
+    } else {
+      secondsWaited += 1
+    }
+  } else {
+    clearInterval(connectionInterval)
+    rl.prompt()
+  }
+}, 1000)
