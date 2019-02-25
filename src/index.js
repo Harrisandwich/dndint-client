@@ -19,6 +19,7 @@ import parseCommand from './parse-command'
 *
 */
 let connected = false
+let appstate = 'menu'
 const socket = io('http://localhost:5000')
 
 const rl = readline.createInterface({
@@ -28,6 +29,7 @@ const rl = readline.createInterface({
 
 socket.on('connect', (resp) => {
   console.log('Connected to server')
+  console.log('Welcome! Use "/help" to see a list of available commands!')
   rl.setPrompt('Main Menu: ')
   rl.prompt()
   connected = true
@@ -38,16 +40,16 @@ rl.on('line', (input) => {
   if (connected) {
     const command = parseCommand(input)
     if (command) {
-      socket.emit('command', command)
-    } else {
-      console.log('Invalid Command')
-      rl.prompt()
+      socket.emit('command', {
+        command,
+        appstate,
+      })
     }
   }
 })
 
 socket.on('command-response', (resp) => {
-  console.log(resp)
+  console.log(resp.output)
   rl.prompt()
 })
 

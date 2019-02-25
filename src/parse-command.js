@@ -32,5 +32,11 @@ export default (input) => {
     })
     return ret
   }
-  return false
+  // if not a command, send as a message
+  ret.command = 'message'
+  ret.options = [{
+    option: 'txt',
+    values: [input],
+  }]
+  return ret
 }
