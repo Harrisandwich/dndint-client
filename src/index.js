@@ -1,7 +1,10 @@
 import readline from 'readline'
 import io from 'socket.io-client'
+import dotenv from 'dotenv'
 import parseCommand from './parse-command'
 
+
+dotenv.load()
 
 /*
 *
@@ -19,19 +22,16 @@ import parseCommand from './parse-command'
 *
 */
 let connected = false
-let appstate = 'menu'
-const socket = io('http://localhost:5000')
+const socketUrl = false ? process.env.HEROKU_SERVER_URL : process.env.LOCAL_SERVER_URL
+const socket = io(socketUrl)
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-socket.on('connect', (resp) => {
+socket.on('connect', () => {
   console.log('Connected to server')
-  console.log('Welcome! Use "/help" to see a list of available commands!')
-  rl.setPrompt('Main Menu: ')
-  rl.prompt()
   connected = true
 })
 
@@ -40,16 +40,28 @@ rl.on('line', (input) => {
   if (connected) {
     const command = parseCommand(input)
     if (command) {
-      socket.emit('command', {
-        command,
-        appstate,
-      })
+      socket.emit('command', { command })
     }
   }
 })
 
 socket.on('command-response', (resp) => {
   console.log(resp.output)
+  rl.prompt()
+})
+
+socket.on('set-appstate', (resp) => {
+  console.log('Remember: You can use "/help" to see a list of available commands!')
+  switch (resp.state) {
+    case 'menu':
+      rl.setPrompt('Main Menu: ')
+      break
+    case 'playing':
+      rl.setPrompt(`${resp.name}: `)
+      break
+    default:
+      rl.setPrompt('Main Menu: ')
+  }
   rl.prompt()
 })
 

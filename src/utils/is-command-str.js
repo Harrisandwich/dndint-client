@@ -1,3 +1,1 @@
-export default (str) => {
-  return str[0] === '/'
-}
+export default str => str[0] === '/'

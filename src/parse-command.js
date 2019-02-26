@@ -2,7 +2,6 @@ import {
   isCommand,
   isOption,
 } from './utils/index'
-import isOptionStr from './utils/is-option-str';
 
 
 export default (input) => {
@@ -13,8 +12,8 @@ export default (input) => {
     ret.command = strings[0].substr(1, strings[0].length)
     ret.options = []
     strings.shift()
-    strings.forEach(str => {
-      if(isOption(str)) {
+    strings.forEach((str) => {
+      if (isOption(str)) {
         const option = str.substr(1, str.length)
         ret.options.push({
           option,
@@ -23,7 +22,7 @@ export default (input) => {
       } else {
         const recentOption = ret.options[ret.options.length - 1]
         let value = str
-        if (parseFloat(str)){
+        if (parseFloat(str)) {
           // if it's a number, convert it
           value = parseFloat(str)
         }
