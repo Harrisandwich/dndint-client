@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import readline from 'readline'
 import io from 'socket.io-client'
 import dotenv from 'dotenv'

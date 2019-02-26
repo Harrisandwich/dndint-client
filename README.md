@@ -20,6 +20,11 @@ npm run dev
 
 # Start production server:
 npm start
+
+# To test as a global CLI app
+npm run build
+npm link
+
 ```
 
 License

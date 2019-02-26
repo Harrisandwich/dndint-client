@@ -11,6 +11,8 @@
     "test": "eslint src",
     "lint-fix": "node_modules/.bin/eslint --fix ./src/*"
   },
+  "preferGlobal": true,
+  "bin": "dist/index.js",
   "eslintConfig": {
     "extends": "eslint:recommended",
     "parserOptions": {
