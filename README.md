@@ -2,6 +2,11 @@ Getting Started
 ---------------
 
 ```sh
+# Clone the repo
+git clone https://github.com/Harrisandwich/dndint-client.git
+cd dndint-client
+
+
 # Install dependencies
 npm install
 
