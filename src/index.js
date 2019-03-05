@@ -40,9 +40,9 @@ socket.on('connect', () => {
 
 rl.on('line', (input) => {
   if (connected) {
-    const command = parseCommand(input)
-    if (command) {
-      socket.emit('command', { command })
+    const payload = parseCommand(input)
+    if (payload) {
+      socket.emit('command', payload)
     }
   }
 })
