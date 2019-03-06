@@ -52,11 +52,19 @@ socket.on('command-response', (resp) => {
   rl.prompt()
 })
 
+socket.on('error', (resp) => {
+  console.log(resp.output)
+  rl.prompt()
+})
+
 socket.on('set-appstate', (resp) => {
   console.log('Remember: You can use "/help" to see a list of available commands!')
   switch (resp.state) {
     case 'menu':
       rl.setPrompt('Main Menu: ')
+      break
+    case 'lobby':
+      rl.setPrompt(`${resp.displayName}-${resp.roomCode}: `)
       break
     case 'playing':
       rl.setPrompt(`${resp.name}: `)
