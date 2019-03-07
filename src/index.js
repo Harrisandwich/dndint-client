@@ -51,6 +51,11 @@ socket.on('command-response', (resp) => {
   rl.prompt()
 })
 
+socket.on('message', (resp) => {
+  console.log(`${resp.displayName}: ${resp.output}`)
+  rl.prompt()
+})
+
 socket.on('error', (resp) => {
   console.log(resp.output)
   rl.prompt()
