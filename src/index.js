@@ -26,7 +26,6 @@ dotenv.load()
 let connected = false
 const socketUrl = false ? process.env.HEROKU_SERVER_URL : process.env.LOCAL_SERVER_URL
 const socket = io(socketUrl)
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -59,19 +58,7 @@ socket.on('error', (resp) => {
 
 socket.on('set-appstate', (resp) => {
   console.log('Remember: You can use "/help" to see a list of available commands!')
-  switch (resp.state) {
-    case 'menu':
-      rl.setPrompt('Main Menu: ')
-      break
-    case 'lobby':
-      rl.setPrompt(`${resp.displayName}-${resp.roomCode}: `)
-      break
-    case 'playing':
-      rl.setPrompt(`${resp.name}: `)
-      break
-    default:
-      rl.setPrompt('Main Menu: ')
-  }
+  rl.setPrompt(resp.prompt)
   rl.prompt()
 })
 
