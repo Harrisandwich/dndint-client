@@ -24,7 +24,7 @@ dotenv.load()
 *
 */
 let connected = false
-const socketUrl = false ? process.env.HEROKU_SERVER_URL : process.env.LOCAL_SERVER_URL
+const socketUrl = true ? process.env.HEROKU_SERVER_URL : process.env.LOCAL_SERVER_URL
 const socket = io(socketUrl)
 const rl = readline.createInterface({
   input: process.stdin,
@@ -52,7 +52,7 @@ socket.on('command-response', (resp) => {
 })
 
 socket.on('message', (resp) => {
-  console.log(`${resp.displayName}: ${resp.output}`)
+  console.log(`\n${resp.displayName}: ${resp.output}\n`)
   rl.prompt()
 })
 
